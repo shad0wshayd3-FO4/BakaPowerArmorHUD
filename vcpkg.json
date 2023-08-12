@@ -1,0 +1,14 @@
+{
+  "name": "bakapowerarmorhud",
+  "description": "F4SE plugin template using CommonLibF4.",
+  "homepage": "https://github.com/shad0wshayd3/BakaPowerArmorHUD",
+  "license": "MIT",
+  "dependencies": [
+    "autotoml",
+    "boost-stl-interfaces",
+    "fmt",
+    "rsm-mmio",
+    "spdlog",
+    "xbyak"
+  ]
+}
