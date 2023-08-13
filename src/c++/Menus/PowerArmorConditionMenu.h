@@ -137,9 +137,8 @@ namespace Menus
 
 		void SetConditionMeterCountImpl(std::uint32_t a_count)
 		{
-			auto count = RE::BSFixedString{ fmt::format("x{:d}"sv, a_count) };
 			RE::Scaleform::GFx::Value args[1];
-			args[0] = count.c_str();
+			args[0] = a_count;
 			ConditionMeter_mc->Invoke("SetCount", nullptr, args, 1);
 		}
 
