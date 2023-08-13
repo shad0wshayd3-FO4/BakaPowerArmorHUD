@@ -8,6 +8,7 @@
     "boost-stl-interfaces",
     "fmt",
     "rsm-mmio",
+    "simpleini",
     "spdlog",
     "xbyak"
   ]

@@ -8,7 +8,7 @@ file(GLOB Papyrus_INPUT
 	${CMAKE_CURRENT_SOURCE_DIR}/*.psc
 )
 
-add_papyrus(
+Papyrus_Add(
 	"Papyrus"
 	GAME
 		${Fallout4Path}
