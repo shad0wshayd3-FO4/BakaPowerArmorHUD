@@ -16,8 +16,10 @@ public:
 		hkSetPowerArmorMode<1187476, 0xE6B>::Install();             // PowerArmor::SwitchToPowerArmor
 		hkSetPowerArmorMode<1150710, 0x1E8>::Install();             // PowerArmor::SwitchFromPowerArmorFurnitureLoaded
 		hkQActorInPowerArmor<31293, 0x14C, false>::Install();       // HUDRadiationModel::CalcEnvDamage
+		hkQActorInPowerArmorPAHC<34363, 0x2D>::Install();           // HUDMenuUtils::GetGameplayHUDColor
 		hkCanBeVisible<893789, 0x12>::Install();                    // HUDCompass::CanBeVisible
 		hkHandleAddInventoryItem<78185, 0xA20>::Install();          // TESObjectREFR::AddInventoryItem
+		hkGetPowerArmorHUDColor<523665, 0x56>::Install();           // GameUIModel::SetGameColors
 	}
 
 	static void InstallPostLoad()
@@ -152,6 +154,37 @@ private:
 	};
 
 	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	class hkQActorInPowerArmorPAHC
+	{
+	public:
+		static void Install()
+		{
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			auto& trampoline = F4SE::GetTrampoline();
+			_QActorInPowerArmor = trampoline.write_call<5>(target.address(), QActorInPowerArmor);
+		}
+
+	private:
+		static bool QActorInPowerArmor(
+			[[maybe_unused]] RE::Actor* a_actor)
+		{
+			if (detail::IsExempt())
+			{
+				return _QActorInPowerArmor(a_actor);
+			}
+
+			if (!MCM::Settings::General::bDisablePAColor)
+			{
+				return _QActorInPowerArmor(a_actor);
+			}
+
+			return false;
+		}
+
+		inline static REL::Relocation<decltype(&QActorInPowerArmor)> _QActorInPowerArmor;
+	};
+
+	template<std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkCanBeVisible
 	{
 	public:
@@ -220,6 +253,43 @@ private:
 		}
 
 		inline static REL::Relocation<decltype(&HandleAddInventoryItem)> _HandleAddInventoryItem;
+	};
+
+	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	class hkGetPowerArmorHUDColor
+	{
+	public:
+		static void Install()
+		{
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			auto& trampoline = F4SE::GetTrampoline();
+			_GetPowerArmorHUDColor = trampoline.write_call<5>(target.address(), GetPowerArmorHUDColor);
+		}
+
+	private:
+		static RE::NiColor& GetPowerArmorHUDColor()
+		{
+			if (detail::IsExempt())
+			{
+				return _GetPowerArmorHUDColor();
+			}
+
+			if (!MCM::Settings::General::bDisablePAColor)
+			{
+				return _GetPowerArmorHUDColor();
+			}
+
+			return GetGameplayHUDColor();
+		}
+
+		static RE::NiColor& GetGameplayHUDColor()
+		{
+			using func_t = decltype(&GetGameplayHUDColor);
+			REL::Relocation<func_t> func{ REL::ID(34363) };
+			return func();
+		}
+
+		inline static REL::Relocation<decltype(&GetPowerArmorHUDColor)> _GetPowerArmorHUDColor;
 	};
 
 	class ActorValueChangedHandler :
