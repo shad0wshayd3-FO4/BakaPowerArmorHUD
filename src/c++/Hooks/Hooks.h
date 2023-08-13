@@ -206,7 +206,7 @@ private:
 
 			auto bCanBeVisible = _CanBeVisible(a_this);
 			if (bCanBeVisible
-				&& RE::PowerArmor::PlayerInPowerArmor())
+			    && RE::PowerArmor::PlayerInPowerArmor())
 			{
 				Menus::PowerArmorConditionMenu::ShowMenu();
 			}
