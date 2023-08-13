@@ -267,7 +267,7 @@ private:
 		}
 
 	private:
-		static RE::NiColor& GetPowerArmorHUDColor()
+		static RE::NiColor GetPowerArmorHUDColor()
 		{
 			if (detail::IsExempt())
 			{
@@ -282,7 +282,7 @@ private:
 			return GetGameplayHUDColor();
 		}
 
-		static RE::NiColor& GetGameplayHUDColor()
+		static RE::NiColor GetGameplayHUDColor()
 		{
 			using func_t = decltype(&GetGameplayHUDColor);
 			REL::Relocation<func_t> func{ REL::ID(34363) };
