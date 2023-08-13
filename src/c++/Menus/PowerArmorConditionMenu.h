@@ -55,6 +55,10 @@ namespace Menus
 			{
 				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
 				{
+					SetConditionMeterVisuals(
+						static_cast<float>(MCM::Settings::General::fConditionMeterX),
+						static_cast<float>(MCM::Settings::General::fConditionMeterY),
+						static_cast<float>(MCM::Settings::General::fConditionMeterScale));
 					UpdateBatteryState();
 					return;
 				}
@@ -96,6 +100,17 @@ namespace Menus
 				UIMessageQueue->AddMessage(
 					"PowerArmorConditionMenu"sv,
 					RE::UI_MESSAGE_TYPE::kHide);
+			}
+		}
+
+		static void SetConditionMeterVisuals(float a_x, float a_y, float a_scale)
+		{
+			if (auto UI = RE::UI::GetSingleton())
+			{
+				if (auto Menu = UI->GetMenu<PowerArmorConditionMenu>())
+				{
+					Menu->SetConditionMeterVisualsImpl(a_x, a_y, a_scale);
+				}
 			}
 		}
 
