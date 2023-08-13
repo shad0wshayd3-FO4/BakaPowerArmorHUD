@@ -16,6 +16,7 @@ public:
 		hkSetPowerArmorMode<1187476, 0xE6B>::Install();             // PowerArmor::SwitchToPowerArmor
 		hkSetPowerArmorMode<1150710, 0x1E8>::Install();             // PowerArmor::SwitchFromPowerArmorFurnitureLoaded
 		hkQActorInPowerArmor<31293, 0x14C, false>::Install();       // HUDRadiationModel::CalcEnvDamage
+		hkQActorInPowerArmor<733718, 0xA8, false>::Install();       // HUDMenu::InitializeHUD
 		hkQActorInPowerArmorPAHC<34363, 0x2D>::Install();           // HUDMenuUtils::GetGameplayHUDColor
 		hkCanBeVisible<893789, 0x12>::Install();                    // HUDCompass::CanBeVisible
 		hkHandleAddInventoryItem<78185, 0xA20>::Install();          // TESObjectREFR::AddInventoryItem

@@ -13,7 +13,6 @@ namespace Menus
 		PowerArmorConditionMenu()
 		{
 			menuFlags.set(
-				RE::UI_MENU_FLAGS::kAlwaysOpen,
 				RE::UI_MENU_FLAGS::kAllowSaving,
 				RE::UI_MENU_FLAGS::kCustomRendering);
 			depthPriority.set(RE::UI_DEPTH_PRIORITY::kHUD);
@@ -68,12 +67,23 @@ namespace Menus
 
 		static void ShowMenu()
 		{
-			if (bMenuShown)
+			if (auto UI = RE::UI::GetSingleton())
+			{
+				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
+				{
+					return;
+				}
+			}
+			else
 			{
 				return;
 			}
 
-			bMenuShown = true;
+			if (!RE::PowerArmor::PlayerInPowerArmor())
+			{
+				return;
+			}
+
 			if (auto UIMessageQueue = RE::UIMessageQueue::GetSingleton())
 			{
 				UIMessageQueue->AddMessage(
@@ -84,12 +94,18 @@ namespace Menus
 
 		static void HideMenu()
 		{
-			if (!bMenuShown)
+			if (auto UI = RE::UI::GetSingleton())
+			{
+				if (!UI->GetMenuOpen<PowerArmorConditionMenu>())
+				{
+					return;
+				}
+			}
+			else
 			{
 				return;
 			}
 
-			bMenuShown = false;
 			if (auto UIMessageQueue = RE::UIMessageQueue::GetSingleton())
 			{
 				UIMessageQueue->AddMessage(
@@ -185,7 +201,6 @@ namespace Menus
 		RE::msvc::unique_ptr<RE::BSGFxShaderFXTarget> ConditionMeter_mc;
 
 	protected:
-		inline static bool bMenuShown{ false };
 		inline static REL::Relocation<RE::SettingT<RE::GameSettingCollection>*> fPowerArmorLowBatterySoundThreshold{ REL::ID(370701) };
 	};
 
