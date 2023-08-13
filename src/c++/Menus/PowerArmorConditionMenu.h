@@ -14,10 +14,9 @@ namespace Menus
 		{
 			menuFlags.set(
 				RE::UI_MENU_FLAGS::kAllowSaving,
+				RE::UI_MENU_FLAGS::kDontHideCursorWhenTopmost,
 				RE::UI_MENU_FLAGS::kCustomRendering);
-			depthPriority.set(RE::UI_DEPTH_PRIORITY::kHUD);
-
-			inputEventHandlingEnabled = false;
+			depthPriority.set(RE::UI_DEPTH_PRIORITY::kSWFLoader);
 
 			auto MoviePath = "Interface\\PowerArmorConditionMenu.swf"sv;
 			const auto ScaleformManager = RE::BSScaleformManager::GetSingleton();
