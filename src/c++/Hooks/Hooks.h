@@ -19,7 +19,6 @@ public:
 		hkQActorInPowerArmor<733718, 0xA8, false>::Install();       // HUDMenu::InitializeHUD
 		hkQActorInPowerArmorPAHC<34363, 0x2D>::Install();           // HUDMenuUtils::GetGameplayHUDColor
 		hkCanBeVisible<893789, 0x12>::Install();                    // HUDCompass::CanBeVisible
-		hkHandleAddInventoryItem<78185, 0xA20>::Install();          // TESObjectREFR::AddInventoryItem
 		hkGetPowerArmorHUDColor<523665, 0x56>::Install();           // GameUIModel::SetGameColors
 	}
 
@@ -223,40 +222,6 @@ private:
 	};
 
 	template<std::uint64_t ID, std::ptrdiff_t OFF>
-	class hkHandleAddInventoryItem
-	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_HandleAddInventoryItem = trampoline.write_call<5>(target.address(), HandleAddInventoryItem);
-		}
-
-	private:
-		static void HandleAddInventoryItem(
-			[[maybe_unused]] RE::Actor& a_wearer,
-			[[maybe_unused]] RE::TESBoundObject* a_obj,
-			[[maybe_unused]] RE::BSTSmartPointer<const RE::ExtraDataList> a_extra)
-		{
-			if (detail::IsExempt())
-			{
-				return _HandleAddInventoryItem(a_wearer, a_obj, a_extra);
-			}
-
-			_HandleAddInventoryItem(a_wearer, a_obj, a_extra);
-			if (a_wearer.formID == 0x00000014
-			    && RE::PowerArmor::PlayerInPowerArmor()
-			    && RE::PowerArmor::IsPowerArmorBattery(a_obj))
-			{
-				Menus::PowerArmorConditionMenu::UpdateBatteryState();
-			}
-		}
-
-		inline static REL::Relocation<decltype(&HandleAddInventoryItem)> _HandleAddInventoryItem;
-	};
-
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkGetPowerArmorHUDColor
 	{
 	public:
@@ -321,55 +286,11 @@ private:
 			switch (a_event.actorValue.formID)
 			{
 				case 0x0000035C:  // PowerArmorBattery
+					if (!RE::PowerArmor::PlayerInPowerArmor())
 					{
-						if (RE::PowerArmor::PlayerInPowerArmor())
-						{
-							Menus::PowerArmorConditionMenu::UpdateBatteryState();
-						}
-						else
-						{
-							detail::Notify<RE::PowerArmorLightData>(false);
-						}
+						detail::Notify<RE::PowerArmorLightData>(false);
 					}
 					break;
-
-				/*
-				case 0x000002EF:  // PowerArmorHeadCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorHeadCondition);
-					}
-					break;
-
-				case 0x000002F0:  // PowerArmorTorsoCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorTorsoCondition);
-					}
-					break;
-
-				case 0x000002F1:  // PowerArmorLeftArmCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorLeftArmCondition);
-					}
-					break;
-
-				case 0x0000035D:  // PowerArmorRightArmCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorRightArmCondition);
-					}
-					break;
-
-				case 0x0000035E:  // PowerArmorLeftLegCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorLeftLegCondition);
-					}
-					break;
-
-				case 0x00000388:  // PowerArmorRightLegCondition
-					{
-						[[maybe_unused]] auto value = a_event.owner->GetActorValue(*ActorValue->powerArmorRightLegCondition);
-					}
-					break;
-				*/
 
 				default:
 					break;

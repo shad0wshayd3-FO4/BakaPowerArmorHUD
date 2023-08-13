@@ -44,22 +44,6 @@ namespace Menus
 			ConditionMeter_mc.release();
 		}
 
-		virtual RE::UI_MESSAGE_RESULTS ProcessMessage(RE::UIMessage& a_message) override
-		{
-			switch (*a_message.type)
-			{
-				case RE::UI_MESSAGE_TYPE::kShow:
-					SetConditionMeterVisuals(
-						static_cast<float>(MCM::Settings::General::fConditionMeterX),
-						static_cast<float>(MCM::Settings::General::fConditionMeterY),
-						static_cast<float>(MCM::Settings::General::fConditionMeterScale));
-					UpdateBatteryState();
-					
-				default:
-					return __super::ProcessMessage(a_message);
-			}
-		}
-
 		static RE::IMenu* Create(const RE::UIMessage&)
 		{
 			return new PowerArmorConditionMenu();
@@ -71,6 +55,7 @@ namespace Menus
 			{
 				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
 				{
+					UpdateBatteryState();
 					return;
 				}
 			}
@@ -111,17 +96,6 @@ namespace Menus
 				UIMessageQueue->AddMessage(
 					"PowerArmorConditionMenu"sv,
 					RE::UI_MESSAGE_TYPE::kHide);
-			}
-		}
-
-		static void SetConditionMeterVisuals(float a_x, float a_y, float a_scale)
-		{
-			if (auto UI = RE::UI::GetSingleton())
-			{
-				if (auto Menu = UI->GetMenu<PowerArmorConditionMenu>())
-				{
-					Menu->SetConditionMeterVisualsImpl(a_x, a_y, a_scale);
-				}
 			}
 		}
 
