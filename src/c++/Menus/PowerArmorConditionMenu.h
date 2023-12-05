@@ -50,6 +50,11 @@ namespace Menus
 
 		static void ShowMenu()
 		{
+			if (!RE::PowerArmor::PlayerInPowerArmor())
+			{
+				return;
+			}
+
 			if (auto UI = RE::UI::GetSingleton())
 			{
 				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
@@ -63,11 +68,6 @@ namespace Menus
 				}
 			}
 			else
-			{
-				return;
-			}
-
-			if (!RE::PowerArmor::PlayerInPowerArmor())
 			{
 				return;
 			}

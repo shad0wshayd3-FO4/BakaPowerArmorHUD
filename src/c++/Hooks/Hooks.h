@@ -121,6 +121,11 @@ private:
 				return _SetPowerArmorMode(a_inPowerArmor);
 			}
 
+			if (MCM::Settings::General::bDisableColor)
+			{
+				return;
+			}
+
 			detail::Notify<RE::ColorUpdateEvent>();
 		}
 
@@ -169,6 +174,11 @@ private:
 			[[maybe_unused]] RE::Actor* a_actor)
 		{
 			if (detail::IsExempt())
+			{
+				return _QActorInPowerArmor(a_actor);
+			}
+
+			if (MCM::Settings::General::bDisableColor)
 			{
 				return _QActorInPowerArmor(a_actor);
 			}
@@ -236,6 +246,11 @@ private:
 		static RE::NiColor GetPowerArmorHUDColor()
 		{
 			if (detail::IsExempt())
+			{
+				return _GetPowerArmorHUDColor();
+			}
+
+			if (MCM::Settings::General::bDisableColor)
 			{
 				return _GetPowerArmorHUDColor();
 			}

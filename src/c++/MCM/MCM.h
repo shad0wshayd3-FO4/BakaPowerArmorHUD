@@ -10,6 +10,7 @@ namespace MCM
 		public:
 			inline static bool bEnable{ true };
 			inline static bool bDisablePAColor{ false };
+			inline static bool bDisableColor{ false };
 
 			inline static double fConditionMeterX{ 136.0 };
 			inline static double fConditionMeterY{ 675.0 };
@@ -22,6 +23,7 @@ namespace MCM
 
 			GetModSettingBool("General", "bEnable", General::bEnable);
 			GetModSettingBool("General", "bDisablePAColor", General::bDisablePAColor);
+			GetModSettingBool("General", "bDisableColor", General::bDisableColor);
 
 			GetModSettingDouble("General", "fConditionMeterX", General::fConditionMeterX);
 			GetModSettingDouble("General", "fConditionMeterY", General::fConditionMeterY);
