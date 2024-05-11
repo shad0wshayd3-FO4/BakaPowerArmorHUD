@@ -128,7 +128,7 @@ namespace Menus
 		class detail
 		{
 		public:
-			template<class T>
+			template <class T>
 			static void Notify(bool a_value)
 			{
 				if (auto EventSource = T::GetEventSource())

@@ -54,7 +54,7 @@ private:
 			return false;
 		}
 
-		template<class T>
+		template <class T>
 		static void Notify()
 		{
 			if (auto EventSource = T::GetEventSource())
@@ -64,7 +64,7 @@ private:
 			}
 		}
 
-		template<class T>
+		template <class T>
 		static void Notify(bool a_value)
 		{
 			if (auto EventSource = T::GetEventSource())
@@ -75,7 +75,7 @@ private:
 		}
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkGetPowerArmorShouldBeVisible
 	{
 	public:
@@ -101,7 +101,7 @@ private:
 		inline static REL::Relocation<decltype(&GetPowerArmorShouldBeVisible)> _GetPowerArmorShouldBeVisible;
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkSetPowerArmorMode
 	{
 	public:
@@ -132,7 +132,7 @@ private:
 		inline static REL::Relocation<decltype(&SetPowerArmorMode)> _SetPowerArmorMode;
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF, bool RETN>
+	template <std::uint64_t ID, std::ptrdiff_t OFF, bool RETN>
 	class hkQActorInPowerArmor
 	{
 	public:
@@ -158,7 +158,7 @@ private:
 		inline static REL::Relocation<decltype(&hkQActorInPowerArmor::QActorInPowerArmor)> _QActorInPowerArmor;
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkQActorInPowerArmorPAHC
 	{
 	public:
@@ -194,7 +194,7 @@ private:
 		inline static REL::Relocation<decltype(&QActorInPowerArmor)> _QActorInPowerArmor;
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkCanBeVisible
 	{
 	public:
@@ -215,8 +215,7 @@ private:
 			}
 
 			auto bCanBeVisible = _CanBeVisible(a_this);
-			if (bCanBeVisible
-			    && RE::PowerArmor::PlayerInPowerArmor())
+			if (bCanBeVisible && RE::PowerArmor::PlayerInPowerArmor())
 			{
 				Menus::PowerArmorConditionMenu::ShowMenu();
 			}
@@ -231,7 +230,7 @@ private:
 		inline static REL::Relocation<decltype(&CanBeVisible)> _CanBeVisible;
 	};
 
-	template<std::uint64_t ID, std::ptrdiff_t OFF>
+	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkGetPowerArmorHUDColor
 	{
 	public:
@@ -300,15 +299,15 @@ private:
 
 			switch (a_event.actorValue.formID)
 			{
-				case 0x0000035C:  // PowerArmorBattery
-					if (!RE::PowerArmor::PlayerInPowerArmor())
-					{
-						detail::Notify<RE::PowerArmorLightData>(false);
-					}
-					break;
+			case 0x0000035C:  // PowerArmorBattery
+				if (!RE::PowerArmor::PlayerInPowerArmor())
+				{
+					detail::Notify<RE::PowerArmorLightData>(false);
+				}
+				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 
 			return RE::BSEventNotifyControl::kContinue;
