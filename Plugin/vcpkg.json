@@ -3,7 +3,6 @@
     "name": "bakapowerarmorhud",
     "homepage": "https://github.com/shad0wshayd3-FO4/BakaPowerArmorHUD",
     "dependencies": [
-        "boost-stl-interfaces",
         "nlohmann-json",
         "rsm-mmio",
         "simpleini",
