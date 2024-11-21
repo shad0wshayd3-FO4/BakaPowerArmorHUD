@@ -16,7 +16,7 @@ namespace Menus
 				RE::UI_MENU_FLAGS::kAllowSaving,
 				RE::UI_MENU_FLAGS::kDontHideCursorWhenTopmost,
 				RE::UI_MENU_FLAGS::kCustomRendering);
-			depthPriority.set(RE::UI_DEPTH_PRIORITY::kSWFLoader);
+			depthPriority = RE::UI_DEPTH_PRIORITY::kSWFLoader;
 
 			auto MoviePath = "Interface\\PowerArmorConditionMenu.swf"sv;
 			const auto ScaleformManager = RE::BSScaleformManager::GetSingleton();
@@ -60,9 +60,9 @@ namespace Menus
 				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
 				{
 					SetConditionMeterVisuals(
-						static_cast<float>(MCM::Settings::General::fConditionMeterX),
-						static_cast<float>(MCM::Settings::General::fConditionMeterY),
-						static_cast<float>(MCM::Settings::General::fConditionMeterScale));
+						static_cast<float>(MCM::Settings::General::fConditionMeterX.GetValue()),
+						static_cast<float>(MCM::Settings::General::fConditionMeterY.GetValue()),
+						static_cast<float>(MCM::Settings::General::fConditionMeterScale.GetValue()));
 					UpdateBatteryState();
 					return;
 				}

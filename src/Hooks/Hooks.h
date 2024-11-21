@@ -46,7 +46,7 @@ private:
 	public:
 		static bool IsExempt()
 		{
-			if (!MCM::Settings::General::bEnable)
+			if (!MCM::Settings::General::bEnable.GetValue())
 			{
 				return true;
 			}
@@ -121,7 +121,7 @@ private:
 				return _SetPowerArmorMode(a_inPowerArmor);
 			}
 
-			if (MCM::Settings::General::bDisableColor)
+			if (MCM::Settings::General::bDisableColor.GetValue())
 			{
 				return;
 			}
@@ -178,12 +178,12 @@ private:
 				return _QActorInPowerArmor(a_actor);
 			}
 
-			if (MCM::Settings::General::bDisableColor)
+			if (MCM::Settings::General::bDisableColor.GetValue())
 			{
 				return _QActorInPowerArmor(a_actor);
 			}
 
-			if (!MCM::Settings::General::bDisablePAColor)
+			if (!MCM::Settings::General::bDisablePAColor.GetValue())
 			{
 				return _QActorInPowerArmor(a_actor);
 			}
@@ -249,12 +249,12 @@ private:
 				return _GetPowerArmorHUDColor();
 			}
 
-			if (MCM::Settings::General::bDisableColor)
+			if (MCM::Settings::General::bDisableColor.GetValue())
 			{
 				return _GetPowerArmorHUDColor();
 			}
 
-			if (!MCM::Settings::General::bDisablePAColor)
+			if (!MCM::Settings::General::bDisablePAColor.GetValue())
 			{
 				return _GetPowerArmorHUDColor();
 			}

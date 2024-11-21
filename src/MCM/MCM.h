@@ -1,83 +1,28 @@
 #pragma once
 
-namespace MCM
+namespace MCM::Settings
 {
-	class Settings
+	namespace General
 	{
-	public:
-		class General
-		{
-		public:
-			inline static bool bEnable{ true };
-			inline static bool bDisablePAColor{ false };
-			inline static bool bDisableColor{ false };
+		static REX::INI::Bool bEnable{ "General", "bEnable", true };
+		static REX::INI::Bool bDisablePAColor{ "General", "bDisablePAColor", false };
+		static REX::INI::Bool bDisableColor{ "General", "bDisableColor", false };
 
-			inline static double fConditionMeterX{ 136.0 };
-			inline static double fConditionMeterY{ 675.0 };
-			inline static double fConditionMeterScale{ 1.0 };
-		};
+		static REX::INI::F64 fConditionMeterX{ "General", "fConditionMeterX", 136.0 };
+		static REX::INI::F64 fConditionMeterY{ "General", "fConditionMeterY", 675.0 };
+		static REX::INI::F64 fConditionMeterScale{ "General", "fConditionMeterScale", 1.0 };
+	}
 
-		static void Update()
-		{
-			ResetStateInit();
+	static void Reset();
 
-			GetModSettingBool("General", "bEnable", General::bEnable);
-			GetModSettingBool("General", "bDisablePAColor", General::bDisablePAColor);
-			GetModSettingBool("General", "bDisableColor", General::bDisableColor);
+	static void Update()
+	{
+		const auto ini = REX::INI::SettingStore::GetSingleton();
+		ini->Init(
+			"Data/MCM/Config/BakaPowerArmorHUD/settings.ini",
+			"Data/MCM/Settings/BakaPowerArmorHUD.ini");
+		ini->Load();
 
-			GetModSettingDouble("General", "fConditionMeterX", General::fConditionMeterX);
-			GetModSettingDouble("General", "fConditionMeterY", General::fConditionMeterY);
-			GetModSettingDouble("General", "fConditionMeterScale", General::fConditionMeterScale);
-
-			ResetStatePost();
-		}
-
-		inline static bool m_FirstRun{ true };
-
-	private:
-		static void ResetStateInit()
-		{
-			if (m_FirstRun)
-			{
-				m_FirstRun = false;
-			}
-
-			m_ini_base.LoadFile("Data/MCM/Config/BakaPowerArmorHUD/settings.ini");
-			m_ini_user.LoadFile("Data/MCM/Settings/BakaPowerArmorHUD.ini");
-		}
-
-		static void ResetStatePost();
-
-	protected:
-		static void GetModSettingChar(const std::string& a_section, const std::string& a_setting, std::string_view& a_value)
-		{
-			auto base = m_ini_base.GetValue(a_section.c_str(), a_setting.c_str(), a_value.data());
-			auto user = m_ini_user.GetValue(a_section.c_str(), a_setting.c_str(), base);
-			a_value = user;
-		}
-
-		static void GetModSettingBool(const std::string& a_section, const std::string& a_setting, bool& a_value)
-		{
-			auto base = m_ini_base.GetBoolValue(a_section.c_str(), a_setting.c_str(), a_value);
-			auto user = m_ini_user.GetBoolValue(a_section.c_str(), a_setting.c_str(), base);
-			a_value = user;
-		}
-
-		static void GetModSettingDouble(const std::string& a_section, const std::string& a_setting, double& a_value)
-		{
-			auto base = m_ini_base.GetDoubleValue(a_section.c_str(), a_setting.c_str(), a_value);
-			auto user = m_ini_user.GetDoubleValue(a_section.c_str(), a_setting.c_str(), base);
-			a_value = user;
-		}
-
-		static void GetModSettingLong(const std::string& a_section, const std::string& a_setting, std::int32_t& a_value)
-		{
-			auto base = m_ini_base.GetLongValue(a_section.c_str(), a_setting.c_str(), a_value);
-			auto user = m_ini_user.GetLongValue(a_section.c_str(), a_setting.c_str(), base);
-			a_value = static_cast<std::int32_t>(user);
-		}
-
-		inline static CSimpleIniA m_ini_base{ true };
-		inline static CSimpleIniA m_ini_user{ true };
-	};
+		Reset();
+	}
 }

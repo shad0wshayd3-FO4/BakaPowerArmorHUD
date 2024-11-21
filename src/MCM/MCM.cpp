@@ -2,13 +2,13 @@
 
 #include "Menus/PowerArmorConditionMenu.h"
 
-namespace MCM
+namespace MCM::Settings
 {
-	void Settings::ResetStatePost()
+	void Reset()
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
 		{
-			if (General::bEnable)
+			if (General::bEnable.GetValue())
 			{
 				RE::SendHUDMessage::SetPowerArmorMode(false);
 				Menus::PowerArmorConditionMenu::ShowMenu();
@@ -19,8 +19,5 @@ namespace MCM
 				Menus::PowerArmorConditionMenu::HideMenu();
 			}
 		}
-
-		m_ini_base.Reset();
-		m_ini_user.Reset();
 	}
 }

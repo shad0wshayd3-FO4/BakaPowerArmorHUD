@@ -6,7 +6,7 @@ namespace Papyrus
 {
 	namespace BakaPowerArmorHUD
 	{
-		constexpr auto SCRIPT_NAME{ "BakaPowerArmorHUD"sv };
+		static constexpr auto SCRIPT_NAME{ "BakaPowerArmorHUD"sv };
 
 		void UpdateSettings(std::monostate)
 		{
