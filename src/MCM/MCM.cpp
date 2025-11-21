@@ -8,7 +8,7 @@ namespace MCM::Settings
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
 		{
-			if (General::bEnable.GetValue())
+			if (General::bEnable)
 			{
 				RE::SendHUDMessage::SetPowerArmorMode(false);
 				Menus::PowerArmorConditionMenu::ShowMenu();
@@ -19,5 +19,16 @@ namespace MCM::Settings
 				Menus::PowerArmorConditionMenu::HideMenu();
 			}
 		}
+	}
+
+	void Update()
+	{
+		const auto ini = REX::INI::SettingStore::GetSingleton();
+		ini->Init(
+			"Data/MCM/Config/BakaPowerArmorHUD/settings.ini",
+			"Data/MCM/Settings/BakaPowerArmorHUD.ini");
+		ini->Load();
+
+		Reset();
 	}
 }

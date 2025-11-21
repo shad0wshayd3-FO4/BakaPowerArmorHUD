@@ -14,7 +14,6 @@ set_languages("c++23")
 set_warnings("allextra")
 
 -- set policies
-set_policy("build.optimization.lto", true)
 set_policy("package.requires_lock", true)
 
 -- add rules
@@ -22,7 +21,7 @@ add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- set config
-set_config("rex_ini", true)
+set_config("commonlib_ini", true)
 
 -- targets
 target("BakaPowerArmorHUD")

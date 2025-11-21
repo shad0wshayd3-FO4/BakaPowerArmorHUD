@@ -24,13 +24,13 @@ namespace Menus
 				ScaleformManager->LoadMovieEx(*this, MoviePath, "root");
 			assert(LoadMovieSuccess);
 
-			filterHolder = RE::msvc::make_unique<RE::BSGFxShaderFXTarget>(*uiMovie, "root.Menu_mc");
+			filterHolder = std::make_unique<RE::BSGFxShaderFXTarget>(*uiMovie, "root.Menu_mc");
 			if (filterHolder)
 			{
 				shaderFXObjects.push_back(filterHolder.get());
 			}
 
-			ConditionMeter_mc = RE::msvc::make_unique<RE::BSGFxShaderFXTarget>(*filterHolder, "ConditionMeter_mc");
+			ConditionMeter_mc = std::make_unique<RE::BSGFxShaderFXTarget>(*filterHolder, "ConditionMeter_mc");
 			if (ConditionMeter_mc)
 			{
 				ConditionMeter_mc->CreateAndSetFiltersToHUD(RE::HUDColorTypes::kPlayerSetColor);
@@ -60,9 +60,9 @@ namespace Menus
 				if (UI->GetMenuOpen<PowerArmorConditionMenu>())
 				{
 					SetConditionMeterVisuals(
-						static_cast<float>(MCM::Settings::General::fConditionMeterX.GetValue()),
-						static_cast<float>(MCM::Settings::General::fConditionMeterY.GetValue()),
-						static_cast<float>(MCM::Settings::General::fConditionMeterScale.GetValue()));
+						MCM::Settings::General::fConditionMeterX,
+						MCM::Settings::General::fConditionMeterY,
+						MCM::Settings::General::fConditionMeterScale);
 					UpdateBatteryState();
 					return;
 				}
@@ -74,9 +74,7 @@ namespace Menus
 
 			if (auto UIMessageQueue = RE::UIMessageQueue::GetSingleton())
 			{
-				UIMessageQueue->AddMessage(
-					"PowerArmorConditionMenu"sv,
-					RE::UI_MESSAGE_TYPE::kShow);
+				UIMessageQueue->AddMessage("PowerArmorConditionMenu"sv, RE::UI_MESSAGE_TYPE::kShow);
 			}
 		}
 
@@ -96,9 +94,7 @@ namespace Menus
 
 			if (auto UIMessageQueue = RE::UIMessageQueue::GetSingleton())
 			{
-				UIMessageQueue->AddMessage(
-					"PowerArmorConditionMenu"sv,
-					RE::UI_MESSAGE_TYPE::kHide);
+				UIMessageQueue->AddMessage("PowerArmorConditionMenu"sv, RE::UI_MESSAGE_TYPE::kHide);
 			}
 		}
 
@@ -141,14 +137,14 @@ namespace Menus
 
 		void SetConditionMeterCountImpl(std::uint32_t a_count)
 		{
-			RE::Scaleform::GFx::Value args[1];
+			Scaleform::GFx::Value args[1];
 			args[0] = a_count;
 			ConditionMeter_mc->Invoke("SetCount", nullptr, args, 1);
 		}
 
 		void SetConditionMeterPercentImpl(float a_percent)
 		{
-			RE::Scaleform::GFx::Value args[1];
+			Scaleform::GFx::Value args[1];
 			args[0] = a_percent;
 			ConditionMeter_mc->Invoke("SetPercent", nullptr, args, 1);
 			ConditionMeter_mc->SetToHUDColor(a_percent <= fPowerArmorLowBatterySoundThreshold->GetFloat());
@@ -186,7 +182,7 @@ namespace Menus
 			}
 		}
 
-		RE::msvc::unique_ptr<RE::BSGFxShaderFXTarget> ConditionMeter_mc;
+		std::unique_ptr<RE::BSGFxShaderFXTarget> ConditionMeter_mc;
 
 	protected:
 		inline static REL::Relocation<RE::SettingT<RE::GameSettingCollection>*> fPowerArmorLowBatterySoundThreshold{ REL::ID(370701) };
@@ -196,9 +192,7 @@ namespace Menus
 	{
 		if (auto UI = RE::UI::GetSingleton())
 		{
-			UI->RegisterMenu(
-				"PowerArmorConditionMenu",
-				PowerArmorConditionMenu::Create);
+			UI->RegisterMenu("PowerArmorConditionMenu", PowerArmorConditionMenu::Create);
 		}
 	}
 }

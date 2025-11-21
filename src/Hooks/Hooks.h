@@ -8,32 +8,12 @@ class Hooks
 public:
 	static void Install()
 	{
-		hkGetPowerArmorShouldBeVisible<1402809, 0x1D>::Install();   // HUDActionPointMeter::CanPlaySoundEffects
-		hkGetPowerArmorShouldBeVisible<742970, 0x190>::Install();   // HUDActiveEffectsDisplay::UpdateDisplayObject
-		hkGetPowerArmorShouldBeVisible<756668, 0x5D9>::Install();   // HUDCompassMarker::SetCompassMarkerData
-		hkGetPowerArmorShouldBeVisible<259269, 0xB6>::Install();    // HUDMarkerData::GetMinorFrame
-		hkGetPowerArmorShouldBeVisible<1511766, 0x107>::Install();  // PowerArmorGeometry::UpdatePowerArmorHUD
-		hkSetPowerArmorMode<1187476, 0xE6B>::Install();             // PowerArmor::SwitchToPowerArmor
-		hkSetPowerArmorMode<1150710, 0x1E8>::Install();             // PowerArmor::SwitchFromPowerArmorFurnitureLoaded
-		hkQActorInPowerArmor<31293, 0x14C, false>::Install();       // HUDRadiationModel::CalcEnvDamage
-		hkQActorInPowerArmor<733718, 0xA8, false>::Install();       // HUDMenu::InitializeHUD
-		hkQActorInPowerArmorPAHC<34363, 0x2D>::Install();           // HUDMenuUtils::GetGameplayHUDColor
-		hkCanBeVisible<893789, 0x12>::Install();                    // HUDCompass::CanBeVisible
-		hkGetPowerArmorHUDColor<523665, 0x56>::Install();           // GameUIModel::SetGameColors
-	}
-
-	static void InstallPostLoad()
-	{
 		MCM::Settings::Update();
 		Menus::Register();
 
 		if (auto PlayerCharacter = RE::PlayerCharacter::GetSingleton())
 		{
-			if (auto EventSource =
-			        static_cast<
-						RE::BSTEventSource<
-							RE::ActorValueEvents::ActorValueChangedEvent>*>(
-						PlayerCharacter))
+			if (auto EventSource = static_cast<RE::BSTEventSource<RE::ActorValueEvents::ActorValueChangedEvent>*>(PlayerCharacter))
 			{
 				EventSource->RegisterSink(ActorValueChangedHandler::GetSingleton());
 			}
@@ -46,7 +26,7 @@ private:
 	public:
 		static bool IsExempt()
 		{
-			if (!MCM::Settings::General::bEnable.GetValue())
+			if (!MCM::Settings::General::bEnable)
 			{
 				return true;
 			}
@@ -75,53 +55,39 @@ private:
 		}
 	};
 
-	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkGetPowerArmorShouldBeVisible
 	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_GetPowerArmorShouldBeVisible = trampoline.write_call<5>(target.address(), GetPowerArmorShouldBeVisible);
-		}
-
 	private:
 		static bool GetPowerArmorShouldBeVisible(
 			[[maybe_unused]] RE::PowerArmorGeometry* a_this)
 		{
 			if (detail::IsExempt())
 			{
-				return _GetPowerArmorShouldBeVisible(a_this);
+				return _GetPowerArmorShouldBeVisible0(a_this);
 			}
 
 			return false;
 		}
 
-		inline static REL::Relocation<decltype(&GetPowerArmorShouldBeVisible)> _GetPowerArmorShouldBeVisible;
+		inline static REL::Hook _GetPowerArmorShouldBeVisible0{ REL::ID(2219884), 0x01D, GetPowerArmorShouldBeVisible };  // HUDActionPointMeter::CanPlaySoundEffects
+		inline static REL::Hook _GetPowerArmorShouldBeVisible1{ REL::ID(2219923), 0x269, GetPowerArmorShouldBeVisible };  // HUDActiveEffectsDisplay::UpdateDisplayObject
+		inline static REL::Hook _GetPowerArmorShouldBeVisible2{ REL::ID(2220221), 0x56C, GetPowerArmorShouldBeVisible };  // HUDCompassMarker::SetCompassMarkerData
+		inline static REL::Hook _GetPowerArmorShouldBeVisible3{ REL::ID(2220500), 0x109, GetPowerArmorShouldBeVisible };  // HUDMarkerData::GetMinorFrame
+		inline static REL::Hook _GetPowerArmorShouldBeVisible4{ REL::ID(2248874), 0x1ED, GetPowerArmorShouldBeVisible };  // PowerArmorGeometry::UpdatePowerArmorHUD
 	};
 
-	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkSetPowerArmorMode
 	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_SetPowerArmorMode = trampoline.write_call<5>(target.address(), SetPowerArmorMode);
-		}
-
 	private:
 		static void SetPowerArmorMode(
 			[[maybe_unused]] bool a_inPowerArmor)
 		{
 			if (detail::IsExempt())
 			{
-				return _SetPowerArmorMode(a_inPowerArmor);
+				return _SetPowerArmorMode0(a_inPowerArmor);
 			}
 
-			if (MCM::Settings::General::bDisableColor.GetValue())
+			if (MCM::Settings::General::bDisableColor)
 			{
 				return;
 			}
@@ -129,92 +95,67 @@ private:
 			detail::Notify<RE::ColorUpdateEvent>();
 		}
 
-		inline static REL::Relocation<decltype(&SetPowerArmorMode)> _SetPowerArmorMode;
+		inline static REL::Hook _SetPowerArmorMode0{ REL::ID(2219442), 0xC8A, SetPowerArmorMode };  // PowerArmor::SwitchToPowerArmor
+		inline static REL::Hook _SetPowerArmorMode1{ REL::ID(2219448), 0x22F, SetPowerArmorMode };  // PowerArmor::SwitchFromPowerArmorFurnitureLoaded
 	};
 
-	template <std::uint64_t ID, std::ptrdiff_t OFF, bool RETN>
 	class hkQActorInPowerArmor
 	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_QActorInPowerArmor = trampoline.write_call<5>(target.address(), QActorInPowerArmor);
-		}
-
 	private:
 		static bool QActorInPowerArmor(
 			[[maybe_unused]] RE::Actor* a_actor)
 		{
 			if (detail::IsExempt())
 			{
-				return _QActorInPowerArmor(a_actor);
-			}
-
-			return RETN;
-		}
-
-		inline static REL::Relocation<decltype(&hkQActorInPowerArmor::QActorInPowerArmor)> _QActorInPowerArmor;
-	};
-
-	template <std::uint64_t ID, std::ptrdiff_t OFF>
-	class hkQActorInPowerArmorPAHC
-	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_QActorInPowerArmor = trampoline.write_call<5>(target.address(), QActorInPowerArmor);
-		}
-
-	private:
-		static bool QActorInPowerArmor(
-			[[maybe_unused]] RE::Actor* a_actor)
-		{
-			if (detail::IsExempt())
-			{
-				return _QActorInPowerArmor(a_actor);
-			}
-
-			if (MCM::Settings::General::bDisableColor.GetValue())
-			{
-				return _QActorInPowerArmor(a_actor);
-			}
-
-			if (!MCM::Settings::General::bDisablePAColor.GetValue())
-			{
-				return _QActorInPowerArmor(a_actor);
+				return _QActorInPowerArmor0(a_actor);
 			}
 
 			return false;
 		}
 
-		inline static REL::Relocation<decltype(&QActorInPowerArmor)> _QActorInPowerArmor;
+		inline static REL::Hook _QActorInPowerArmor0{ REL::ID(2221907), 0x170, QActorInPowerArmor };  // HUDRadiationModel::CalculateEnvironmentalDamage
+		inline static REL::Hook _QActorInPowerArmor1{ REL::ID(2248856), 0x0C1, QActorInPowerArmor };  // HUDMenu::InitializeHUD
 	};
 
-	template <std::uint64_t ID, std::ptrdiff_t OFF>
-	class hkCanBeVisible
+	class hkQActorInPowerArmor_HUDColor
 	{
-	public:
-		static void Install()
+	private:
+		static bool QActorInPowerArmor(
+			[[maybe_unused]] RE::Actor* a_actor)
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_CanBeVisible = trampoline.write_call<5>(target.address(), CanBeVisible);
+			if (detail::IsExempt())
+			{
+				return _QActorInPowerArmor0(a_actor);
+			}
+
+			if (MCM::Settings::General::bDisableColor)
+			{
+				return _QActorInPowerArmor0(a_actor);
+			}
+
+			if (!MCM::Settings::General::bDisablePAColor)
+			{
+				return _QActorInPowerArmor0(a_actor);
+			}
+
+			return false;
 		}
 
+		inline static REL::Hook _QActorInPowerArmor0{ REL::ID(2248840), 0x2D, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDColor
+	};
+
+	class hkCanBeVisible
+	{
 	private:
 		static bool CanBeVisible(
 			[[maybe_unused]] void* a_this)
 		{
 			if (detail::IsExempt())
 			{
-				return _CanBeVisible(a_this);
+				return _CanBeVisible0(a_this);
 			}
 
-			auto bCanBeVisible = _CanBeVisible(a_this);
+			auto bCanBeVisible = _CanBeVisible0(a_this);
 			if (bCanBeVisible && RE::PowerArmor::PlayerInPowerArmor())
 			{
 				Menus::PowerArmorConditionMenu::ShowMenu();
@@ -227,18 +168,17 @@ private:
 			return bCanBeVisible;
 		}
 
-		inline static REL::Relocation<decltype(&CanBeVisible)> _CanBeVisible;
+		inline static REL::Hook _CanBeVisible0{ REL::ID(2220160), 0x0A, CanBeVisible };  // HUDCompass::CanBeVisible
 	};
 
-	template <std::uint64_t ID, std::ptrdiff_t OFF>
 	class hkGetPowerArmorHUDColor
 	{
-	public:
-		static void Install()
+	private:
+		static RE::NiColor GetGameplayHUDColor()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = F4SE::GetTrampoline();
-			_GetPowerArmorHUDColor = trampoline.write_call<5>(target.address(), GetPowerArmorHUDColor);
+			using func_t = decltype(&GetGameplayHUDColor);
+			REL::Relocation<func_t> func{ REL::ID(2248840) };
+			return func();
 		}
 
 	private:
@@ -246,30 +186,23 @@ private:
 		{
 			if (detail::IsExempt())
 			{
-				return _GetPowerArmorHUDColor();
+				return _GetPowerArmorHUDColor0();
 			}
 
-			if (MCM::Settings::General::bDisableColor.GetValue())
+			if (MCM::Settings::General::bDisableColor)
 			{
-				return _GetPowerArmorHUDColor();
+				return _GetPowerArmorHUDColor0();
 			}
 
-			if (!MCM::Settings::General::bDisablePAColor.GetValue())
+			if (!MCM::Settings::General::bDisablePAColor)
 			{
-				return _GetPowerArmorHUDColor();
+				return _GetPowerArmorHUDColor0();
 			}
 
 			return GetGameplayHUDColor();
 		}
 
-		static RE::NiColor GetGameplayHUDColor()
-		{
-			using func_t = decltype(&GetGameplayHUDColor);
-			REL::Relocation<func_t> func{ REL::ID(34363) };
-			return func();
-		}
-
-		inline static REL::Relocation<decltype(&GetPowerArmorHUDColor)> _GetPowerArmorHUDColor;
+		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors
 	};
 
 	class ActorValueChangedHandler :

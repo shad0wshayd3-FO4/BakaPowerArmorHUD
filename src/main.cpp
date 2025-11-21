@@ -9,11 +9,8 @@ namespace
 	{
 		switch (a_msg->type)
 		{
-		case F4SE::MessagingInterface::kPostLoad:
-			Hooks::Install();
-			break;
 		case F4SE::MessagingInterface::kGameDataReady:
-			Hooks::InstallPostLoad();
+			Hooks::Install();
 			break;
 		default:
 			break;
@@ -21,11 +18,10 @@ namespace
 	}
 }
 
-F4SEPluginLoad(const F4SE::LoadInterface* a_F4SE)
+F4SE_PLUGIN_LOAD(const F4SE::LoadInterface* a_f4se)
 {
-	F4SE::Init(a_F4SE);
+	F4SE::Init(a_f4se, { .trampoline = true, .trampolineSize = 128 });
 
-	F4SE::AllocTrampoline(1u << 8);
 	F4SE::GetMessagingInterface()->RegisterListener(MessageCallback);
 	F4SE::GetPapyrusInterface()->Register(Papyrus::RegisterFunctions);
 
