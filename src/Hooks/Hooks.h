@@ -206,18 +206,11 @@ private:
 	};
 
 	class ActorValueChangedHandler :
+		public REX::Singleton<ActorValueChangedHandler>,
 		public RE::BSTEventSink<RE::ActorValueEvents::ActorValueChangedEvent>
 	{
 	public:
-		[[nodiscard]] static ActorValueChangedHandler* GetSingleton()
-		{
-			static ActorValueChangedHandler singleton;
-			return std::addressof(singleton);
-		}
-
-		virtual RE::BSEventNotifyControl ProcessEvent(
-			const RE::ActorValueEvents::ActorValueChangedEvent& a_event,
-			RE::BSTEventSource<RE::ActorValueEvents::ActorValueChangedEvent>*) override
+		virtual RE::BSEventNotifyControl ProcessEvent(const RE::ActorValueEvents::ActorValueChangedEvent& a_event, RE::BSTEventSource<RE::ActorValueEvents::ActorValueChangedEvent>*) override
 		{
 			if (detail::IsExempt())
 			{
