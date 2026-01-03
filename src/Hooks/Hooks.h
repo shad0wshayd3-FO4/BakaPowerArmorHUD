@@ -92,7 +92,8 @@ private:
 				return;
 			}
 
-			detail::Notify<RE::ColorUpdateEvent>();
+			F4SE::GetTaskInterface()->AddUITask([]
+				{ detail::Notify<RE::ColorUpdateEvent>(); });
 		}
 
 		inline static REL::Hook _SetPowerArmorMode0{ REL::ID(2219442), 0xC8A, SetPowerArmorMode };  // PowerArmor::SwitchToPowerArmor
