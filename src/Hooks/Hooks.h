@@ -35,16 +35,6 @@ private:
 		}
 
 		template <class T>
-		static void Notify()
-		{
-			if (auto EventSource = T::GetEventSource())
-			{
-				auto eventData = T{};
-				EventSource->Notify(eventData);
-			}
-		}
-
-		template <class T>
 		static void Notify(bool a_value)
 		{
 			if (auto EventSource = T::GetEventSource())
@@ -92,8 +82,14 @@ private:
 				return;
 			}
 
-			F4SE::GetTaskInterface()->AddUITask([]
-				{ detail::Notify<RE::ColorUpdateEvent>(); });
+			F4SE::GetTaskInterface()->AddUITask(
+				[]
+				{
+					if (auto GameUIModel = RE::GameUIModel::GetSingleton())
+					{
+						GameUIModel->SetGameColors();
+					}
+				});
 		}
 
 		inline static REL::Hook _SetPowerArmorMode0{ REL::ID(2219442), 0xC8A, SetPowerArmorMode };  // PowerArmor::SwitchToPowerArmor
