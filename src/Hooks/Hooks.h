@@ -139,6 +139,7 @@ private:
 		}
 
 		inline static REL::Hook _QActorInPowerArmor0{ REL::ID(2248840), 0x2D, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDColor
+		inline static REL::Hook _QActorInPowerArmor1{ REL::ID(2248845), 0x33, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDBackgroundColor
 	};
 
 	class hkCanBeVisible
