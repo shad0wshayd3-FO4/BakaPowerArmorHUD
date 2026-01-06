@@ -2,9 +2,9 @@
 
 #include "Menus/PowerArmorConditionMenu.h"
 
-namespace MCM::Settings
+namespace MCM
 {
-	void Reset()
+	void Settings::PostUpdate()
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
 		{
@@ -19,16 +19,5 @@ namespace MCM::Settings
 				Menus::PowerArmorConditionMenu::HideMenu();
 			}
 		}
-	}
-
-	void Update()
-	{
-		const auto ini = REX::INI::SettingStore::GetSingleton();
-		ini->Init(
-			"Data/MCM/Config/BakaPowerArmorHUD/settings.ini",
-			"Data/MCM/Settings/BakaPowerArmorHUD.ini");
-		ini->Load();
-
-		Reset();
 	}
 }
