@@ -52,11 +52,6 @@ private:
 				return _SetPowerArmorMode0(a_inPowerArmor);
 			}
 
-			if (MCM::Settings::General::bDisableColor)
-			{
-				return;
-			}
-
 			F4SE::GetTaskInterface()->AddUITask(
 				[]
 				{
@@ -96,11 +91,6 @@ private:
 			[[maybe_unused]] RE::Actor* a_actor)
 		{
 			if (detail::IsExempt())
-			{
-				return _QActorInPowerArmor0(a_actor);
-			}
-
-			if (MCM::Settings::General::bDisableColor)
 			{
 				return _QActorInPowerArmor0(a_actor);
 			}
@@ -158,11 +148,6 @@ private:
 		static RE::NiColor GetPowerArmorHUDColor()
 		{
 			if (detail::IsExempt())
-			{
-				return _GetPowerArmorHUDColor0();
-			}
-
-			if (MCM::Settings::General::bDisableColor)
 			{
 				return _GetPowerArmorHUDColor0();
 			}
