@@ -16,6 +16,12 @@ namespace MCM
 			inline static REX::INI::F32 fConditionMeterScale{ "General", "fConditionMeterScale", 1.0f };
 		};
 
+		class Runtime
+		{
+		public:
+			inline static bool bEnable{ true };
+		};
+
 		static void Update()
 		{
 			PreUpdate();

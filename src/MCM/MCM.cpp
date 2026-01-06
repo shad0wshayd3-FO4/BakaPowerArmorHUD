@@ -8,21 +8,26 @@ namespace MCM
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
 		{
-			if (General::bEnable)
+			if (Runtime::bEnable != General::bEnable)
 			{
-				RE::SendHUDMessage::SetPowerArmorMode(false);
-				Menus::PowerArmorConditionMenu::ShowMenu();
-			}
-			else
-			{
-				RE::SendHUDMessage::SetPowerArmorMode(true);
-				Menus::PowerArmorConditionMenu::HideMenu();
+				if (General::bEnable)
+				{
+					RE::SendHUDMessage::SetPowerArmorMode(false);
+					Menus::PowerArmorConditionMenu::ShowMenu();
+				}
+				else
+				{
+					RE::SendHUDMessage::SetPowerArmorMode(true);
+					Menus::PowerArmorConditionMenu::HideMenu();
+				}
 			}
 		}
 	}
 
 	void Settings::PreUpdate()
 	{
+		Runtime::bEnable = General::bEnable;
+
 		if (bRegistered)
 		{
 			return;
