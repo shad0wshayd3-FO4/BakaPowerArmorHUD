@@ -4,6 +4,19 @@
 
 namespace MCM
 {
+	namespace detail
+	{
+		template <class T>
+		static void Notify()
+		{
+			if (auto EventSource = T::GetEventSource())
+			{
+				auto eventData = T{};
+				EventSource->Notify(eventData);
+			}
+		}
+	}
+
 	void Settings::PosUpdate()
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
@@ -21,6 +34,8 @@ namespace MCM
 					Menus::PowerArmorConditionMenu::HideMenu();
 				}
 			}
+
+			detail::Notify<RE::ColorUpdateEvent>();
 		}
 	}
 
