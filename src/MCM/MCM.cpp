@@ -4,7 +4,7 @@
 
 namespace MCM
 {
-	void Settings::PostUpdate()
+	void Settings::PosUpdate()
 	{
 		if (RE::PowerArmor::PlayerInPowerArmor())
 		{
@@ -18,6 +18,20 @@ namespace MCM
 				RE::SendHUDMessage::SetPowerArmorMode(true);
 				Menus::PowerArmorConditionMenu::HideMenu();
 			}
+		}
+	}
+
+	void Settings::PreUpdate()
+	{
+		if (bRegistered)
+		{
+			return;
+		}
+
+		if (auto UI = RE::UI::GetSingleton())
+		{
+			UI->RegisterSink<RE::MenuOpenCloseEvent>(EventHandler::GetSingleton());
+			bRegistered = true;
 		}
 	}
 }

@@ -18,16 +18,37 @@ namespace MCM
 
 		static void Update()
 		{
+			PreUpdate();
+
 			const auto ini = REX::INI::SettingStore::GetSingleton();
 			ini->Init(
 				"Data/MCM/Config/BakaPowerArmorHUD/settings.ini",
 				"Data/MCM/Settings/BakaPowerArmorHUD.ini");
 			ini->Load();
 
-			PostUpdate();
+			PosUpdate();
 		}
 
 	private:
-		static void PostUpdate();
+		class EventHandler :
+			public RE::BSTEventSink<RE::MenuOpenCloseEvent>,
+			public REX::Singleton<EventHandler>
+		{
+		public:
+			virtual RE::BSEventNotifyControl ProcessEvent(const RE::MenuOpenCloseEvent& a_event, RE::BSTEventSource<RE::MenuOpenCloseEvent>*) override
+			{
+				if (a_event.menuName == "PauseMenu" && !a_event.opening)
+				{
+					MCM::Settings::Update();
+				}
+
+				return RE::BSEventNotifyControl::kContinue;
+			}
+		};
+
+		static void PosUpdate();
+		static void PreUpdate();
+
+		inline static bool bRegistered{ false };
 	};
 }
