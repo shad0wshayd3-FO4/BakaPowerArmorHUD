@@ -18,6 +18,16 @@ private:
 
 			return false;
 		}
+
+		template <class T>
+		static void Notify()
+		{
+			if (auto EventSource = T::GetEventSource())
+			{
+				auto eventData = T{};
+				EventSource->Notify(eventData);
+			}
+		}
 	};
 
 	class hkUpdatePowerArmorHUD
@@ -76,14 +86,7 @@ private:
 				return _SetPowerArmorMode0(a_inPowerArmor);
 			}
 
-			F4SE::GetTaskInterface()->AddUITask(
-				[]
-				{
-					if (auto GameUIModel = RE::GameUIModel::GetSingleton())
-					{
-						GameUIModel->SetGameColors();
-					}
-				});
+			detail::Notify<RE::ColorUpdateEvent>();
 		}
 
 		inline static REL::Hook _SetPowerArmorMode0{ REL::ID(2219442), 0xC8A, SetPowerArmorMode };  // PowerArmor::SwitchToPowerArmor
