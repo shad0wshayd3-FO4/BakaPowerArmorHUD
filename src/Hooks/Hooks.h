@@ -134,33 +134,6 @@ private:
 		inline static REL::Hook _QActorInPowerArmor1{ REL::ID(2248845), 0x33, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDBackgroundColor
 	};
 
-	class hkCanBeVisible
-	{
-	private:
-		static bool CanBeVisible(
-			[[maybe_unused]] void* a_this)
-		{
-			if (detail::IsExempt())
-			{
-				return _CanBeVisible0(a_this);
-			}
-
-			auto bCanBeVisible = _CanBeVisible0(a_this);
-			if (bCanBeVisible && RE::PowerArmor::PlayerInPowerArmor())
-			{
-				Menus::PowerArmorConditionMenu::ShowMenu();
-			}
-			else
-			{
-				Menus::PowerArmorConditionMenu::HideMenu();
-			}
-
-			return bCanBeVisible;
-		}
-
-		inline static REL::Hook _CanBeVisible0{ REL::ID(2220160), 0x0A, CanBeVisible };  // HUDCompass::CanBeVisible
-	};
-
 	class hkGetPowerArmorHUDColor
 	{
 	private:
@@ -188,5 +161,32 @@ private:
 		}
 
 		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors
+	};
+
+	class hkCanBeVisible
+	{
+	private:
+		static bool CanBeVisible(
+			[[maybe_unused]] void* a_this)
+		{
+			if (detail::IsExempt())
+			{
+				return _CanBeVisible0(a_this);
+			}
+
+			auto bCanBeVisible = _CanBeVisible0(a_this);
+			if (bCanBeVisible && RE::PowerArmor::PlayerInPowerArmor())
+			{
+				Menus::PowerArmorConditionMenu::ShowMenu();
+			}
+			else
+			{
+				Menus::PowerArmorConditionMenu::HideMenu();
+			}
+
+			return bCanBeVisible;
+		}
+
+		inline static REL::Hook _CanBeVisible0{ REL::ID(2220160), 0x0A, CanBeVisible };  // HUDCompass::CanBeVisible
 	};
 };
