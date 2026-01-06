@@ -5,21 +5,6 @@
 
 class Hooks
 {
-public:
-	static void Install()
-	{
-		MCM::Settings::Update();
-		Menus::Register();
-
-		if (auto PlayerCharacter = RE::PlayerCharacter::GetSingleton())
-		{
-			if (auto EventSource = static_cast<RE::BSTEventSource<RE::ActorValueEvents::ActorValueChangedEvent>*>(PlayerCharacter))
-			{
-				EventSource->RegisterSink(ActorValueChangedHandler::GetSingleton());
-			}
-		}
-	}
-
 private:
 	class detail
 	{
@@ -32,16 +17,6 @@ private:
 			}
 
 			return false;
-		}
-
-		template <class T>
-		static void Notify(bool a_value)
-		{
-			if (auto EventSource = T::GetEventSource())
-			{
-				auto eventData = T{ a_value };
-				EventSource->Notify(eventData);
-			}
 		}
 	};
 
@@ -201,40 +176,5 @@ private:
 		}
 
 		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors
-	};
-
-	class ActorValueChangedHandler :
-		public REX::Singleton<ActorValueChangedHandler>,
-		public RE::BSTEventSink<RE::ActorValueEvents::ActorValueChangedEvent>
-	{
-	public:
-		virtual RE::BSEventNotifyControl ProcessEvent(const RE::ActorValueEvents::ActorValueChangedEvent& a_event, RE::BSTEventSource<RE::ActorValueEvents::ActorValueChangedEvent>*) override
-		{
-			if (detail::IsExempt())
-			{
-				return RE::BSEventNotifyControl::kContinue;
-			}
-
-			auto ActorValue = RE::ActorValue::GetSingleton();
-			if (!ActorValue)
-			{
-				return RE::BSEventNotifyControl::kContinue;
-			}
-
-			switch (a_event.actorValue.formID)
-			{
-			case 0x0000035C:  // PowerArmorBattery
-				if (!RE::PowerArmor::PlayerInPowerArmor())
-				{
-					detail::Notify<RE::PowerArmorLightData>(false);
-				}
-				break;
-
-			default:
-				break;
-			}
-
-			return RE::BSEventNotifyControl::kContinue;
-		}
 	};
 };

@@ -121,20 +121,6 @@ namespace Menus
 		}
 
 	private:
-		class detail
-		{
-		public:
-			template <class T>
-			static void Notify(bool a_value)
-			{
-				if (auto EventSource = T::GetEventSource())
-				{
-					auto eventData = T{ a_value };
-					EventSource->Notify(eventData);
-				}
-			}
-		};
-
 		void SetConditionMeterCountImpl(std::uint32_t a_count)
 		{
 			Scaleform::GFx::Value args[1];
@@ -162,21 +148,12 @@ namespace Menus
 		{
 			if (auto PlayerCharacter = RE::PlayerCharacter::GetSingleton())
 			{
-				std::uint32_t count = PlayerCharacter->GetInventoryObjectCount(RE::PowerArmor::GetDefaultBatteryObject());
+				auto count = PlayerCharacter->GetInventoryObjectCount(RE::PowerArmor::GetDefaultBatteryObject());
 				SetConditionMeterCountImpl(count);
 
 				if (auto ActorValue = RE::ActorValue::GetSingleton())
 				{
-					float value = PlayerCharacter->GetActorValue(*ActorValue->powerArmorBattery);
-					if (value <= 0.0f)
-					{
-						detail::Notify<RE::PowerArmorLightData>(true);
-					}
-					else
-					{
-						detail::Notify<RE::PowerArmorLightData>(false);
-					}
-
+					auto value = PlayerCharacter->GetActorValue(*ActorValue->powerArmorBattery);
 					SetConditionMeterPercentImpl(value);
 				}
 			}
@@ -190,6 +167,8 @@ namespace Menus
 
 	inline void Register()
 	{
+		MCM::Settings::Update();
+
 		if (auto UI = RE::UI::GetSingleton())
 		{
 			UI->RegisterMenu("PowerArmorConditionMenu", PowerArmorConditionMenu::Create);
