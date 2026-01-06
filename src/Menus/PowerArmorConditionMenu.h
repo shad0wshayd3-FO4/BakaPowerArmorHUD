@@ -24,23 +24,12 @@ namespace Menus
 				ScaleformManager->LoadMovieEx(*this, MoviePath, "root");
 			assert(LoadMovieSuccess);
 
-			filterHolder = std::make_unique<RE::BSGFxShaderFXTarget>(*uiMovie, "root.Menu_mc");
+			filterHolder = std::make_unique<RE::BSGFxShaderFXTarget>(*uiMovie, "root.Menu_mc.ConditionMeter_mc");
 			if (filterHolder)
 			{
+				filterHolder->CreateAndSetFiltersToHUD(RE::HUDColorTypes::kPlayerSetColor);
 				shaderFXObjects.push_back(filterHolder.get());
 			}
-
-			ConditionMeter_mc = std::make_unique<RE::BSGFxShaderFXTarget>(*filterHolder, "ConditionMeter_mc");
-			if (ConditionMeter_mc)
-			{
-				ConditionMeter_mc->CreateAndSetFiltersToHUD(RE::HUDColorTypes::kPlayerSetColor);
-				shaderFXObjects.push_back(ConditionMeter_mc.get());
-			}
-		}
-
-		virtual ~PowerArmorConditionMenu()
-		{
-			ConditionMeter_mc.release();
 		}
 
 		static RE::IMenu* Create(const RE::UIMessage&)
@@ -125,23 +114,23 @@ namespace Menus
 		{
 			Scaleform::GFx::Value args[1];
 			args[0] = a_count;
-			ConditionMeter_mc->Invoke("SetCount", nullptr, args, 1);
+			filterHolder->Invoke("SetCount", nullptr, args, 1);
 		}
 
 		void SetConditionMeterPercentImpl(float a_percent)
 		{
 			Scaleform::GFx::Value args[1];
 			args[0] = a_percent;
-			ConditionMeter_mc->Invoke("SetPercent", nullptr, args, 1);
-			ConditionMeter_mc->SetToHUDColor(a_percent <= fPowerArmorLowBatterySoundThreshold->GetFloat());
+			filterHolder->Invoke("SetPercent", nullptr, args, 1);
+			filterHolder->SetToHUDColor(a_percent <= fPowerArmorLowBatterySoundThreshold->GetFloat());
 		}
 
 		void SetConditionMeterVisualsImpl(float a_x, float a_y, float a_scale)
 		{
-			ConditionMeter_mc->SetMember("x", a_x);
-			ConditionMeter_mc->SetMember("y", a_y);
-			ConditionMeter_mc->SetMember("scaleX", a_scale);
-			ConditionMeter_mc->SetMember("scaleY", a_scale);
+			filterHolder->SetMember("x", a_x);
+			filterHolder->SetMember("y", a_y);
+			filterHolder->SetMember("scaleX", a_scale);
+			filterHolder->SetMember("scaleY", a_scale);
 		}
 
 		void UpdateBatteryStateImpl()
@@ -158,8 +147,6 @@ namespace Menus
 				}
 			}
 		}
-
-		std::unique_ptr<RE::BSGFxShaderFXTarget> ConditionMeter_mc;
 
 	protected:
 		inline static REL::Relocation<RE::SettingT<RE::GameSettingCollection>*> fPowerArmorLowBatterySoundThreshold{ REL::ID(370701) };

@@ -138,14 +138,6 @@ private:
 	class hkGetPowerArmorHUDColor
 	{
 	private:
-		static RE::NiColor GetGameplayHUDColor()
-		{
-			using func_t = decltype(&GetGameplayHUDColor);
-			REL::Relocation<func_t> func{ REL::ID(2248840) };
-			return func();
-		}
-
-	private:
 		static RE::NiColor GetPowerArmorHUDColor()
 		{
 			if (detail::IsExempt())
@@ -158,7 +150,7 @@ private:
 				return _GetPowerArmorHUDColor0();
 			}
 
-			return GetGameplayHUDColor();
+			return RE::HUDMenuUtils::GetGameplayHUDColor();
 		}
 
 		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors

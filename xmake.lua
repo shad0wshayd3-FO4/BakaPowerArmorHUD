@@ -6,7 +6,7 @@ includes("lib/commonlibf4")
 
 -- set project
 set_project("BakaPowerArmorHUD")
-set_version("2.3.0")
+set_version("2.4.0")
 set_license("GPL-3.0")
 
 -- set defaults
