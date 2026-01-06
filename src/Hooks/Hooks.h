@@ -130,8 +130,9 @@ private:
 			return false;
 		}
 
-		inline static REL::Hook _QActorInPowerArmor0{ REL::ID(2248840), 0x2D, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDColor
-		inline static REL::Hook _QActorInPowerArmor1{ REL::ID(2248845), 0x33, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDBackgroundColor
+		inline static REL::Hook _QActorInPowerArmor0{ REL::ID(2248840), 0x02D, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDColor
+		inline static REL::Hook _QActorInPowerArmor1{ REL::ID(2248845), 0x033, QActorInPowerArmor };  // HUDMenuUtils::GetGameplayHUDBackgroundColor
+		inline static REL::Hook _QActorInPowerArmor2{ REL::ID(2249216), 0x297, QActorInPowerArmor };  // LoadingMenu::~LoadingMenu
 	};
 
 	class hkGetPowerArmorHUDColor
@@ -161,6 +162,34 @@ private:
 		}
 
 		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors
+	};
+
+	class hkUpdateParams
+	{
+	private:
+		static bool UpdateParams(void* a_this, void* a_param)
+		{
+			if (detail::IsExempt())
+			{
+				return _UpdateParams0(a_this, a_param);
+			}
+
+			if (!MCM::Settings::General::bDisablePAColor)
+			{
+				return _UpdateParams0(a_this, a_param);
+			}
+
+			auto cached = *UsePowerArmorColor;
+			*UsePowerArmorColor = false;
+			auto result = _UpdateParams0(a_this, a_param);
+			*UsePowerArmorColor = cached;
+			return result;
+		}
+
+		inline static REL::HookVFT _UpdateParams0{ RE::VTABLE::ImageSpaceEffectModMenu[0], 0x09, UpdateParams };
+
+	private:
+		inline static REL::Relocation<bool*> UsePowerArmorColor{ REL::ID(2713192) };
 	};
 
 	class hkCanBeVisible
