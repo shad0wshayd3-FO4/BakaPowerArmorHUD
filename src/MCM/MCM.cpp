@@ -33,6 +33,8 @@ namespace MCM
 					RE::SendHUDMessage::SetPowerArmorMode(true);
 					Menus::PowerArmorConditionMenu::HideMenu();
 				}
+
+				Runtime::bRunOnce = true;
 			}
 
 			detail::Notify<RE::ColorUpdateEvent>();

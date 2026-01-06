@@ -20,6 +20,7 @@ namespace MCM
 		{
 		public:
 			inline static bool bEnable{ true };
+			inline static bool bRunOnce{ false };
 		};
 
 		static void Update()

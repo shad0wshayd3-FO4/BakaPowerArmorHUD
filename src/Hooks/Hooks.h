@@ -20,6 +20,30 @@ private:
 		}
 	};
 
+	class hkUpdatePowerArmorHUD
+	{
+	private:
+		static void UpdatePowerArmorHUD(
+			[[maybe_unused]] RE::PowerArmorGeometry* a_this)
+		{
+			if (detail::IsExempt())
+			{
+				return _UpdatePowerArmorHUD0(a_this);
+			}
+
+			if (MCM::Settings::Runtime::bRunOnce)
+			{
+				MCM::Settings::Runtime::bRunOnce = false;
+				return _UpdatePowerArmorHUD0(a_this);
+			}
+
+			return;
+		}
+
+		inline static REL::Hook _UpdatePowerArmorHUD0{ REL::ID(2248849), 0x10, UpdatePowerArmorHUD };  // HUDMenu::Update (unused?)
+		inline static REL::Hook _UpdatePowerArmorHUD1{ REL::ID(2248853), 0x4E, UpdatePowerArmorHUD };  // HUDMenu::AdvanceMovie
+	};
+
 	class hkGetPowerArmorShouldBeVisible
 	{
 	private:
@@ -38,7 +62,7 @@ private:
 		inline static REL::Hook _GetPowerArmorShouldBeVisible1{ REL::ID(2219923), 0x269, GetPowerArmorShouldBeVisible };  // HUDActiveEffectsDisplay::UpdateDisplayObject
 		inline static REL::Hook _GetPowerArmorShouldBeVisible2{ REL::ID(2220221), 0x56C, GetPowerArmorShouldBeVisible };  // HUDCompassMarker::SetCompassMarkerData
 		inline static REL::Hook _GetPowerArmorShouldBeVisible3{ REL::ID(2220500), 0x109, GetPowerArmorShouldBeVisible };  // HUDMarkerData::GetMinorFrame
-		inline static REL::Hook _GetPowerArmorShouldBeVisible4{ REL::ID(2248874), 0x1ED, GetPowerArmorShouldBeVisible };  // PowerArmorGeometry::UpdatePowerArmorHUD
+		// inline static REL::Hook _GetPowerArmorShouldBeVisible4{ REL::ID(2248874), 0x1ED, GetPowerArmorShouldBeVisible };  // PowerArmorGeometry::UpdatePowerArmorHUD
 	};
 
 	class hkSetPowerArmorMode
