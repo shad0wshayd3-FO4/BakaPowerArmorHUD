@@ -37,7 +37,11 @@ namespace MCM
 				Runtime::bRunOnce = true;
 			}
 
-			detail::Notify<RE::ColorUpdateEvent>();
+			if (auto UI = RE::UI::GetSingleton();
+				UI && !UI->GetMenuOpen<RE::PipboyMenu>())
+			{
+				detail::Notify<RE::ColorUpdateEvent>();
+			}
 		}
 	}
 

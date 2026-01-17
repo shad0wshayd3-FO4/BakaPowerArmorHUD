@@ -156,7 +156,7 @@ private:
 		inline static REL::Hook _GetPowerArmorHUDColor0{ REL::ID(2220911), 0x48, GetPowerArmorHUDColor };  // GameUIModel::SetGameColors
 	};
 
-	class hkUpdateParams
+	class hkUpdateParams_ModMenu
 	{
 	private:
 		static bool UpdateParams(void* a_this, void* a_param)
@@ -182,6 +182,34 @@ private:
 
 	private:
 		inline static REL::Relocation<bool*> UsePowerArmorColor{ REL::ID(2713192) };
+	};
+
+	class hkUpdateParams_PipboyScreen
+	{
+	private:
+		static bool UpdateParams(void* a_this, void* a_param)
+		{
+			if (detail::IsExempt())
+			{
+				return _UpdateParams0(a_this, a_param);
+			}
+
+			if (!MCM::Settings::General::bDisablePAColor)
+			{
+				return _UpdateParams0(a_this, a_param);
+			}
+
+			auto cached = *UsePowerArmorColor;
+			*UsePowerArmorColor = false;
+			auto result = _UpdateParams0(a_this, a_param);
+			*UsePowerArmorColor = cached;
+			return result;
+		}
+
+		inline static REL::HookVFT _UpdateParams0{ RE::VTABLE::ImageSpaceEffectPipboyScreen[0], 0x09, UpdateParams };
+
+	private:
+		inline static REL::Relocation<bool*> UsePowerArmorColor{ REL::ID(2713203) };
 	};
 
 	class hkCanBeVisible
